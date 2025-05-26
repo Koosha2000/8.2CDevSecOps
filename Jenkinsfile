@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         SONAR_PROJECT_KEY = 'Koosha2000_8.2CDevSecOps'
-        SONAR_ORGANIZATION = 'Koosha2000'
-        SONAR_TOKEN = credentials('sonar-token')
+        SONAR_ORGANIZATION = 'Koosha'
+        SONAR_TOKEN = credentials('SONAR-TOKEN')
     }
 
     stages {
@@ -40,7 +40,7 @@ pipeline {
 
         stage('SonarCloud Analysis') {
             steps {
-                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: '649682acbf087daaea8efe4f4e668f50fe6e1de8')]) {
                     sh '''
                         curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
                         unzip -o sonar-scanner.zip
