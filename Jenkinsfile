@@ -2,13 +2,15 @@ pipeline {
     agent any
 
     environment {
-        NODE_ENV = 'development'
+        SONAR_PROJECT_KEY = 'Koosha2000_8.2CDevSecOps'
+        SONAR_ORGANIZATION = 'Koosha2000'
+        SONAR_TOKEN = credentials('sonar-token')
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Koosha2000/8.2CDevSecOps.git'
+                git 'https://github.com/Koosha2000/8.2CDevSecOps.git'
             }
         }
 
@@ -20,7 +22,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh 'npm test || true'  // continues even if test fails
+                sh 'npm test || true'
             }
         }
 
@@ -38,12 +40,13 @@ pipeline {
 
         stage('SonarCloud Analysis') {
             steps {
-                withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     sh '''
                         curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
                         unzip -o sonar-scanner.zip
-                        export PATH=$PWD/sonar-scanner-*/bin:$PATH
-                        sonar-scanner
+                        cd sonar-scanner-5.0.1.3006-linux
+                        export PATH=$PWD/bin:$PATH
+                        ./bin/sonar-scanner
                     '''
                 }
             }
